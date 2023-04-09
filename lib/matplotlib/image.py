@@ -11,6 +11,7 @@ import warnings
 
 import numpy as np
 import PIL.PngImagePlugin
+from PIL.ExifTags import TAGS
 
 import matplotlib as mpl
 from matplotlib import _api, cbook, cm
@@ -680,6 +681,7 @@ class _ImageBase(martist.Artist, cm.ScalarMappable):
         """Write the image to png file *fname*."""
         im = self.to_rgba(self._A[::-1] if self.origin == 'lower' else self._A,
                           bytes=True, norm=True)
+        # @TODO(sudheesh): Looks like we need to embed the image contents here.
         PIL.Image.fromarray(im).save(fname, format="png")
 
     def set_data(self, A):
@@ -1656,6 +1658,11 @@ def imsave(fname, arr, vmin=None, vmax=None, cmap=None, format=None,
         pil_shape = (rgba.shape[1], rgba.shape[0])
         image = PIL.Image.frombuffer(
             "RGBA", pil_shape, rgba, "raw", "RGBA", 0, 1)
+        # Introduce the storage of EXIF data for storing ImageDescription (270) [0x010e]
+        # Use as reference https://exiv2.org/tags.html
+        exif_data = image.getexif()
+        if 'alt' in metadata:
+            exif_data[0x010e] = metadata['alt']    # EXIF - Image.ImageDescription at 0X010e
         if format == "png":
             # Only use the metadata kwarg if pnginfo is not set, because the
             # semantics of duplicate keys in pnginfo is unclear.
@@ -1684,7 +1691,7 @@ def imsave(fname, arr, vmin=None, vmax=None, cmap=None, format=None,
             image = background
         pil_kwargs.setdefault("format", format)
         pil_kwargs.setdefault("dpi", (dpi, dpi))
-        image.save(fname, **pil_kwargs)
+        image.save(fname, exif=exif_data, **pil_kwargs)
 
 
 def pil_to_array(pilImage):

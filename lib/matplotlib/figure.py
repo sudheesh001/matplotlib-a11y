@@ -3309,7 +3309,6 @@ class Figure(FigureBase):
             `PIL.Image.Image.save` when saving the figure.
 
         """
-
         kwargs.setdefault('dpi', mpl.rcParams['savefig.dpi'])
         if transparent is None:
             transparent = mpl.rcParams['savefig.transparent']

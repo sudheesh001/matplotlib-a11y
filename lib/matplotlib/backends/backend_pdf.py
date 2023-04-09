@@ -162,6 +162,7 @@ def _create_pdf_info_dict(backend, metadata):
         'Creator': f'Matplotlib v{mpl.__version__}, https://matplotlib.org',
         'Producer': f'Matplotlib {backend} backend v{mpl.__version__}',
         'CreationDate': source_date,
+        'Accessibility': f'This is a description of the PDF document',
         **metadata
     }
     info = {k: v for (k, v) in info.items() if v is not None}
@@ -191,6 +192,7 @@ def _create_pdf_info_dict(backend, metadata):
         'CreationDate': is_date,
         'ModDate': is_date,
         'Trapped': check_trapped,
+        'Accessibility': is_string_like,
     }
     for k in info:
         if k not in keywords:

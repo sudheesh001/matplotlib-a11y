@@ -163,6 +163,7 @@ def test_savefig_metadata(monkeypatch):
         '/Subject': 'Test page',
         '/Title': 'Multipage PDF',
         '/Trapped': '/True',
+        '/Accessibility': f'This is a description of the PDF document',
     }
 
 
@@ -220,6 +221,7 @@ def test_multipage_metadata(monkeypatch):
         '/Subject': 'Test page',
         '/Title': 'Multipage PDF',
         '/Trapped': '/True',
+        '/Accessibility': f'This is a description of the PDF document',
     }
 
 
